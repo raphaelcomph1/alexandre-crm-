@@ -1,13 +1,22 @@
-from stages import model_leads
-import repo 
+# from stages import model_leads
+from model import lead
+from stages import default_stage
+from repo import LeadRepository
+
+lead_backend = LeadRepository()
+
+
 def add_lead():
     name = input('Nome:')
     company = input('Empresa:')
     email = input('Email:')
-    repo.create_lead(model_leads(name, company, email))
+    Lead = lead(name, company, email, default_stage)
+    modeled_lead = Lead.model_leads()
+    lead_backend.create_lead(modeled_lead)
+
     print('Lead add')
 def list_leads():
-    leads = repo.read_lead()
+    leads = lead_backend.read_lead()
     if not leads:
         print('Nenhum lead ainda')
         return
@@ -22,7 +31,7 @@ def search_leads():
         print('Consulta vazia')
         return
     
-    leads = repo.read_lead()
+    leads = lead_backend.read_lead()
     results = []
 
     for i, lead  in enumerate(leads):
@@ -39,7 +48,7 @@ def search_leads():
         print(f'{i:02d} | {lead['name'] :<20} | {lead['company']:<20} | {lead['email'] :<20}')
     
 def export_leads():    
-    path_csv = repo.export_csv()
+    path_csv = lead_backend.export_csv()
     if path_csv is None:
         print('Não foi possivel executar os leads como CSV')
     else:
